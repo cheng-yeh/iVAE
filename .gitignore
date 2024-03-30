@@ -8,3 +8,5 @@ runs/
 *.json
 ckpt/
 slurm_log/
+*.out
+data/
