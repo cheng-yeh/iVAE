@@ -120,9 +120,14 @@ if __name__ == '__main__':
                 writer.add_scalar('data/elbo', logger.get_last('elbo'), it)
                 scheduler.step(logger.get_last('elbo'))
 
-            if it % int(args.max_iter / 5) == 0 and not args.no_log:
+            if it % int(args.max_iter / 3) == 0 and not args.no_log:
                 checkpoint(TORCH_CHECKPOINT_FOLDER, exp_id, it, model, optimizer,
                            logger.get_last('elbo'), logger.get_last('perf'))
+
+                # Save all estimated z for further analysis
+                all_x, all_u, _ = train_loader.get_all_data()
+                _, all_z_est = model.elbo(all_x, all_u)
+                np.savez(f'log/data/{exp_id}_z_est.npz', z_est=all_z_est.cpu().detach().numpy())
 
         eet = time.time()
         print('epoch {} done in: {}s;\tloss: {};\tperf: {}'.format(int(it / len(train_loader)) + 1, eet - est,

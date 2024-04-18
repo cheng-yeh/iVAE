@@ -339,6 +339,9 @@ class DataLoaderGPU:
             idx = self.idx[self.batch_size * b:self.batch_size * (b + 1)]
             yield self.x[idx], self.u[idx], self.s[idx]
 
+    def get_all_data(self):
+        return self.x, self.u, self.s
+
     def get_metadata(self):
         return {'path': self.path,
                 'nps': self.nps,
